@@ -182,7 +182,6 @@ int main(){
 	//CHAR ARITMETICA 
 	to_uppercase(text);
 	printf("Texto en mayus: %s\n",text);
-	return 0;
 
 	//MEMORIA DINAMICA
 	//area de memoria que se asigna en tiempo de ejecución
@@ -209,6 +208,21 @@ int main(){
  		__uint32_t size;
  		node_t* first;
  	} list_t;
+
+	int matrix[3][4] = {
+ 	{1, 2, 3, 4},
+ 	{5, 6, 7, 8},
+ 	{9, 10, 11, 12}
+ 	};
+
+	// p apunta al int en la fila 0, columna 0
+	int *p_matrix = &matrix[0][0]; 
+	// reshape es un puntero a un array de 2 ints
+	int (*reshape)[2] = (int (*)[2]) p_matrix;
+
+	printf("%d\n", p_matrix[3]);
+	printf("%d\n", reshape[1][1]); // Qu´e imprime esta l´ınea?
+	return 0;
 
 }
 //valgrind es muy util para detectar los siguientes errores 
@@ -245,8 +259,17 @@ DATA variables globales inicializadas y variables estaticas
 puntero a funcion EJEMPLO
 la idea es que tenes un puntero...que apunta a una funcion
 lo divertido es que podes hacer que el puntero apunte a cualquier otra funcion y funca!
-void (*print)(int) = print_int;
+	void (*print)(int) = print_int;
 13 print(42); // () desreferencia el puntero a funci´on
 14 print = print_float;
 15 print(3.14);
+*/
+/*
+ARRAY DE ARRAYS
+(es basicamente un array multidimensional)
+la memoria se almacena en forma continua 
+a[i][j] = a*(a[i]+j) EQUIVALENTE
+a[i][j] = a*(a+i*COLS+j)
+En memoria, los arrays multidimensionales se almacenan en
+orden de fila. (Row-major order)
 */
