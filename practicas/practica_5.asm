@@ -1,3 +1,13 @@
+;no tenemos mascara azul por que
+;usamos como destino
+;el registro donde procesamos azules
+;POR QUE 80 Y NO FF en maskBlendN?
+;POR QUE SI
+;LA INSTRUCCION SOLO LE INTERESA EL BIT 
+;MAS SIGNIFICATIVO 
+maskblend1: DB 0x00,0x80,0x00,0x00,0x00,0x00
+maskblend2: DB 0x00,0x00,0x80,0x00,0x00,0x00
+maskAlpha:  DB 0x00,0x00,0x00,0xFF,0x00,0x00
 shuffle_image2: DB 0x02,0x01,0x00,0x03,0x06,0x05,0x04,0x07,0x0A,0x09,0x08,0x0E,0x0D,0x0C,0x0F
 todos128: times 16 db 128
 ; EJERCICIO 1
@@ -190,6 +200,7 @@ xor rax,rax ;inicializamos rax a 0
     paddb xmm0,xmm8     
     PCMPGTB xmm0,xmm5 
     PBLENDVB xmm4,xmm6 ;dejo el average si no se cumple que es mas grande    
+
     ; tenemos los promedios en xmm4 y 
     ; las restas en xmm6
     ; instruccion PBLENDVB
@@ -203,6 +214,25 @@ xor rax,rax ;inicializamos rax a 0
     ; y un and not 
     ; y ver los resultados     
 
+    ;ahora tenemos RGB 
+    ;todos procesados
+    ;como los unimos 
+    movdqa xmm7,        [maskAlpha]
+
+    ;OJO!
+    ;conviene tener la carga de las mascaras
+    ;afuera del loop
+    ;PBLENDVB nos fuerza a que la mascara este en XMM0
+    ;asi y todo lo podemos guardar en un registro 
+    ;y despues hacer movimientos entre registros
+    movdqa xmm0,[maskblend1]
+    PBLENDVB xmm3,xmm4
+
+    movdqa xmm0,[maskblend2]
+    PBLENDVB xmm3,xmm5
+
+    por xmm3,xmm7 ;agrega la intensidad de alpha
+    
     movdqu [r10+rax],xmm3 ;guardo el resultado en dst 
     add rax,16 
     ;aumentamos el offset asi no estamos 
